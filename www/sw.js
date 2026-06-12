@@ -1,4 +1,4 @@
-const CACHE_NAME = 'che-pozyrit-shell-v5';
+const CACHE_NAME = 'che-pozyrit-shell-v6';
 const SHELL = [
   './',
   './index.html',

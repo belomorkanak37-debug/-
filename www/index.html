@@ -1591,6 +1591,226 @@
       .shake-permission-card { min-height: 72px; }
     }
 
+  
+
+    /* === MY LISTS: просмотрено / буду смотреть === */
+    .quick-lists {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: clamp(8px, 1.4vw, 14px);
+      margin-right: clamp(9px, 1.8vw, 18px);
+    }
+
+    .quick-list-btn {
+      width: clamp(52px, 7.2vw, 70px);
+      height: clamp(52px, 7.2vw, 70px);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,.95), transparent 38%),
+        rgba(255, 253, 247, .78);
+      border: 2px solid rgba(32,38,74,.22);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 12px 24px rgba(32,38,74,.08);
+      transition: transform .16s ease, translate .16s ease, box-shadow .16s ease;
+      backdrop-filter: blur(5px);
+    }
+    .quick-list-btn:first-child { transform: rotate(-3deg); }
+    .quick-list-btn:nth-child(2) { transform: rotate(3deg); }
+    .quick-list-btn:active {
+      translate: 0 4px;
+      box-shadow: 0 5px 12px rgba(32,38,74,.08);
+      transform: rotate(0deg) scale(.96);
+    }
+
+    .quick-icon { width: 76%; height: 76%; overflow: visible; }
+    .quick-icon .qi-paper { fill: #fffdf7; stroke: var(--ink); stroke-width: 3.2; stroke-linejoin: round; stroke-linecap: round; }
+    .quick-icon .qi-line, .quick-icon .qi-check, .quick-icon .qi-fold { fill: none; stroke: var(--ink); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+    .quick-icon .qi-play { fill: #d9d1ff; stroke: var(--ink); stroke-width: 3.2; stroke-linejoin: round; }
+    .quick-icon .qi-badge { fill: #bff1c9; stroke: var(--ink); stroke-width: 3.2; }
+    .quick-icon .qi-check { stroke-width: 4.2; }
+    .quick-icon .qi-dot { fill: #9bd7ff; stroke: var(--ink); stroke-width: 2.2; }
+    .quick-icon .qi-star-fill { fill: #ffd9b0; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; }
+
+    .list-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      min-height: 100dvh;
+      padding: calc(76px + var(--top-safe)) clamp(18px, 5.6vw, 64px) calc(28px + var(--bottom-safe));
+      background:
+        radial-gradient(circle at 10% 10%, #bbaeff 0 3px, transparent 4px),
+        radial-gradient(circle at 88% 18%, #f17498 0 4px, transparent 5px),
+        radial-gradient(circle at 11% 62%, #8ed9f5 0 4px, transparent 5px),
+        radial-gradient(circle at 76% 90%, #ffc65f 0 4px, transparent 5px),
+        linear-gradient(180deg, #fffdf7 0%, #fff8ef 58%, #fffdf8 100%);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(24px) scale(.985);
+      transition: opacity .22s ease, transform .28s cubic-bezier(.22,1.05,.34,1);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .list-panel::-webkit-scrollbar { display: none; }
+    .list-panel.show { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+    html.list-open, body.list-open { overflow: hidden; height: 100%; }
+
+    .list-close {
+      position: fixed;
+      top: calc(30px + var(--top-safe));
+      right: clamp(18px, 4.6vw, 58px);
+      z-index: 3;
+      width: clamp(56px, 7.4vw, 72px);
+      height: clamp(56px, 7.4vw, 72px);
+      border-radius: 50%;
+      background: rgba(255,255,255,.88);
+      border: 2.5px solid var(--ink);
+      box-shadow: 0 8px 0 rgba(32,38,74,.10), 0 20px 24px rgba(32,38,74,.10);
+      color: var(--ink);
+      font-size: clamp(34px, 4.6vw, 46px);
+      font-weight: 900;
+      line-height: .82;
+      transform: rotate(3deg);
+    }
+
+    .list-paper {
+      width: min(100%, 820px);
+      margin: 0 auto;
+      padding: clamp(24px, 5vw, 48px);
+      border: 2.4px solid var(--ink);
+      border-radius: clamp(28px, 5vw, 48px);
+      background: rgba(255,253,247,.94);
+      box-shadow: 0 28px 50px rgba(32,38,74,.10);
+      position: relative;
+    }
+    .list-paper::before {
+      content: "";
+      position: absolute;
+      inset: 11px;
+      border: 1.7px dashed rgba(32,38,74,.16);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    .list-head { position: relative; z-index: 1; display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .list-head-icon {
+      width: 64px;
+      height: 64px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 22px 18px 24px 19px;
+      background: #e8e2ff;
+      border: 2px solid rgba(32,38,74,.45);
+      font-size: 32px;
+      transform: rotate(-3deg);
+    }
+    .list-head h2 { margin: 0; font-size: clamp(32px, 5.7vw, 54px); line-height: .98; letter-spacing: -.055em; }
+    .list-head p { margin: 8px 0 0; color: rgba(32,38,74,.62); font-size: clamp(15px, 2.4vw, 21px); line-height: 1.25; }
+
+    .saved-list { position: relative; z-index: 1; display: grid; gap: 18px; }
+    .list-empty {
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 26px;
+      border: 2px dashed rgba(32,38,74,.18);
+      border-radius: 28px;
+      color: rgba(32,38,74,.70);
+      font-size: 18px;
+      line-height: 1.25;
+    }
+    .list-empty b { display:block; font-size: 36px; margin-bottom: 8px; }
+
+    .saved-item {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 14px;
+      padding: 14px;
+      border: 2px solid rgba(32,38,74,.42);
+      border-radius: 26px 22px 29px 24px;
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 10px 24px rgba(32,38,74,.06);
+      transform: rotate(-.25deg);
+    }
+    .saved-item:nth-child(even) { transform: rotate(.25deg); }
+    .saved-poster {
+      width: 92px;
+      height: 128px;
+      overflow: hidden;
+      border-radius: 19px 15px 21px 17px;
+      border: 2px solid rgba(32,38,74,.45);
+      background: linear-gradient(145deg, #e8e2ff, #fff0ba);
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+    }
+    .saved-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .saved-title { display: inline; color: var(--ink); text-decoration: none; font-size: 24px; line-height: 1; font-weight: 900; letter-spacing: -.045em; }
+    .saved-title[href]:hover { text-decoration: underline; }
+    .saved-meta { margin: 6px 0 10px; color: rgba(32,38,74,.60); font-family: "Trebuchet MS", system-ui, sans-serif; font-size: 13px; line-height: 1.25; }
+    .saved-stars { display: flex; gap: 2px; margin: 8px 0 10px; }
+    .star-btn {
+      width: 31px;
+      height: 31px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      color: #c7bbdd;
+      font-size: 27px;
+      line-height: 1;
+      text-shadow: 0 1px 0 rgba(255,255,255,.9);
+      transition: transform .12s ease, color .12s ease;
+    }
+    .star-btn.active { color: #ffd36a; -webkit-text-stroke: 1px var(--ink); }
+    .star-btn:active { transform: scale(.86) rotate(-7deg); }
+
+    .saved-note {
+      width: 100%;
+      min-height: 76px;
+      resize: vertical;
+      border: 1.8px solid rgba(32,38,74,.26);
+      border-radius: 18px 16px 19px 17px;
+      background: rgba(255,253,247,.85);
+      padding: 11px 12px;
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.3;
+      outline: none;
+      font-family: "Trebuchet MS", system-ui, sans-serif;
+    }
+    .saved-note:focus { border-color: rgba(32,38,74,.58); box-shadow: 0 0 0 4px rgba(232,225,255,.55); }
+    .saved-actions { display: flex; justify-content: flex-end; margin-top: 9px; }
+    .remove-saved {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1.8px solid rgba(32,38,74,.28);
+      color: rgba(32,38,74,.68);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 520px) {
+      .topbar { align-items: center; }
+      .quick-lists { gap: 7px; margin-right: 8px; }
+      .quick-list-btn { width: 49px; height: 49px; }
+      .list-panel { padding: calc(82px + var(--top-safe)) 16px calc(24px + var(--bottom-safe)); }
+      .list-paper { padding: 24px 18px; }
+      .list-head { gap: 12px; }
+      .list-head-icon { width: 54px; height: 54px; font-size: 28px; }
+      .list-head h2 { font-size: 33px; }
+      .list-head p { font-size: 14px; }
+      .saved-item { grid-template-columns: 76px minmax(0, 1fr); gap: 11px; padding: 12px; }
+      .saved-poster { width: 76px; height: 108px; }
+      .saved-title { font-size: 21px; }
+      .saved-meta { font-size: 12px; }
+      .star-btn { width: 28px; height: 28px; font-size: 25px; }
+      .saved-note { min-height: 72px; font-size: 13px; }
+    }
+
   </style>
 </head>
 <body>
@@ -1603,6 +1823,28 @@
             <strong>Чё позырить?</strong>
             <span>ЧПЗРТЬ</span>
           </div>
+          <nav class="quick-lists" aria-label="Мои списки">
+            <button class="quick-list-btn" id="openWatched" type="button" aria-label="Открыть просмотренное">
+              <svg class="quick-icon quick-icon-watched" viewBox="0 0 64 64" aria-hidden="true">
+                <path class="qi-paper" d="M13 18c2-7 8-9 15-8h22c5 0 8 3 8 8v25c0 7-4 10-11 10H18c-7 0-10-4-10-11V25c0-3 2-6 5-7Z" />
+                <path class="qi-line" d="M18 19h31M18 28h31M18 37h31M18 46h25" />
+                <path class="qi-play" d="M28 22l17 11-17 11V22Z" />
+                <circle class="qi-badge" cx="47" cy="44" r="14" />
+                <path class="qi-check" d="M39 44l6 6 12-15" />
+              </svg>
+            </button>
+            <button class="quick-list-btn" id="openWatchlist" type="button" aria-label="Открыть буду смотреть">
+              <svg class="quick-icon quick-icon-watchlist" viewBox="0 0 64 64" aria-hidden="true">
+                <path class="qi-paper" d="M18 10h27c5 0 8 3 8 8v31c0 5-3 8-8 8H18c-5 0-8-3-8-8V18c0-5 3-8 8-8Z" />
+                <circle class="qi-dot" cx="23" cy="22" r="3.2" />
+                <circle class="qi-dot" cx="23" cy="33" r="3.2" />
+                <circle class="qi-dot" cx="23" cy="44" r="3.2" />
+                <path class="qi-line" d="M31 22h14M31 33h14M31 44h10" />
+                <path class="qi-fold" d="M12 50c9 2 16 0 22-7" />
+                <path class="qi-star-fill" d="M48 31l4.5 9 10 1.4-7.2 6.5 1.8 9.8-9.1-5-9.1 5 1.8-9.8-7.2-6.5 10-1.4L48 31Z" />
+              </svg>
+            </button>
+          </nav>
           <button class="settings-btn" id="openSettings" type="button" aria-label="Открыть фильтры">
             <svg viewBox="0 0 32 32" aria-hidden="true">
               <path d="M14.3 3.8h3.2l1.1 3.7 2.8 1.1 3.4-1.8 2.2 2.4-1.8 3.3 1.1 2.9 3.5 1v3.3l-3.6 1.1-1.1 2.7 1.8 3.3-2.3 2.3-3.3-1.8-2.8 1.1-1 3.5h-3.3l-1.1-3.6-2.7-1.1-3.3 1.8-2.3-2.3 1.7-3.3-1.1-2.8-3.5-1v-3.3l3.6-1.1 1.1-2.8-1.8-3.3 2.4-2.3 3.3 1.8 2.8-1.1 1-3.7Z" />
@@ -1661,7 +1903,7 @@
             <p class="why" id="resultWhy"></p>
             <div class="card-actions">
               <button class="mini-btn" type="button" data-reaction="Смотрел">Смотрел</button>
-              <button class="mini-btn" type="button" data-reaction="В список">В список</button>
+              <button class="mini-btn" type="button" data-reaction="Буду смотреть">Буду смотреть</button>
               <button class="mini-btn" type="button" data-reaction="Не хочу">Не хочу</button>
             </div>
           </div>
@@ -1676,6 +1918,20 @@
             </span>
           </button>
         </div>
+
+        <aside class="list-panel" id="listPanel" aria-hidden="true" aria-label="Мой список">
+          <button class="list-close" id="closeListPanel" type="button" aria-label="Закрыть список">×</button>
+          <div class="list-paper">
+            <div class="list-head">
+              <div class="list-head-icon" id="listHeadIcon" aria-hidden="true">✓</div>
+              <div>
+                <h2 id="listTitle">Просмотрено</h2>
+                <p id="listSubtitle">Твои заметки и оценки живут здесь.</p>
+              </div>
+            </div>
+            <div class="saved-list" id="savedList"></div>
+          </div>
+        </aside>
 
         <div class="burst-layer" id="burstLayer" aria-hidden="true"></div>
         <div class="toast" id="toast" role="status"></div>
@@ -1761,6 +2017,8 @@
       selectedGenres: new Set(),
       shakeReady: false,
       resultOpen: false,
+      listOpen: false,
+      currentItem: null,
       lastShakeAt: 0,
       loading: false,
       hapticsReady: 'vibrate' in navigator
@@ -1786,7 +2044,15 @@
       drawer: document.getElementById('drawer'),
       scrim: document.getElementById('scrim'),
       openSettings: document.getElementById('openSettings'),
+      openWatched: document.getElementById('openWatched'),
+      openWatchlist: document.getElementById('openWatchlist'),
       closeSettings: document.getElementById('closeSettings'),
+      listPanel: document.getElementById('listPanel'),
+      closeListPanel: document.getElementById('closeListPanel'),
+      listTitle: document.getElementById('listTitle'),
+      listSubtitle: document.getElementById('listSubtitle'),
+      listHeadIcon: document.getElementById('listHeadIcon'),
+      savedList: document.getElementById('savedList'),
       typeChips: document.getElementById('typeChips'),
       originChips: document.getElementById('originChips'),
       yearChips: document.getElementById('yearChips'),
@@ -1798,7 +2064,7 @@
     };
 
     async function randomize() {
-      if (state.loading || state.resultOpen) return;
+      if (state.loading || state.resultOpen || state.listOpen) return;
       setLoading(true);
       closeResult();
       animateShake();
@@ -1913,6 +2179,7 @@
     }
 
     function renderResult(item) {
+      state.currentItem = item;
       els.resultTitle.textContent = item.title;
       if (item.kinopoiskUrl) {
         els.resultTitleLink.href = item.kinopoiskUrl;
@@ -1938,6 +2205,7 @@
     }
 
     function renderError(error) {
+      state.currentItem = null;
       els.resultTitleLink.removeAttribute('href');
       els.resultTitleLink.removeAttribute('title');
       els.resultTitle.textContent = 'Не получилось подобрать';
@@ -2298,7 +2566,7 @@
 
     function handleMotion(event) {
       const a = event.accelerationIncludingGravity;
-      if (!a || state.loading || state.resultOpen) return;
+      if (!a || state.loading || state.resultOpen || state.listOpen) return;
       const force = Math.abs(a.x || 0) + Math.abs(a.y || 0) + Math.abs(a.z || 0);
       const now = Date.now();
       if (force > 36 && now - state.lastShakeAt > 1300) {
@@ -2310,6 +2578,206 @@
 
     function clearReactions() {
       document.querySelectorAll('[data-reaction]').forEach(btn => btn.classList.remove('done'));
+    }
+
+    const LIST_STORAGE = {
+      watched: 'che_pozyrit_watched_v1',
+      watchlist: 'che_pozyrit_watchlist_v1'
+    };
+
+    const LIST_META = {
+      watched: {
+        title: 'Просмотрено',
+        subtitle: 'Тут можно поставить оценку и оставить пару мыслей после просмотра.',
+        icon: '✓',
+        empty: 'Тут пока пусто. Нажми “Смотрел” на выпавшем тайтле — и он поселится здесь.'
+      },
+      watchlist: {
+        title: 'Буду смотреть',
+        subtitle: 'Список на потом: чтобы не потерять то самое “надо бы глянуть”.',
+        icon: '★',
+        empty: 'Сюда попадают тайтлы после кнопки “Буду смотреть”. Пока список отдыхает.'
+      }
+    };
+
+    function getSavedList(kind) {
+      try {
+        const raw = localStorage.getItem(LIST_STORAGE[kind]);
+        const list = raw ? JSON.parse(raw) : [];
+        return Array.isArray(list) ? list : [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveSavedList(kind, list) {
+      try {
+        localStorage.setItem(LIST_STORAGE[kind], JSON.stringify(list));
+      } catch (_) {
+        showToast('Телефон не дал сохранить список 😶');
+      }
+    }
+
+    function savedKey(item) {
+      return String(item?.id || item?.kinopoiskUrl || item?.title || Date.now());
+    }
+
+    function makeStoredItem(item, kind) {
+      const key = savedKey(item);
+      const current = [...getSavedList('watched'), ...getSavedList('watchlist')].find(entry => savedKey(entry) === key) || {};
+      return {
+        ...item,
+        savedAt: current.savedAt || new Date().toISOString(),
+        listKind: kind,
+        userStars: Number(current.userStars || 0),
+        note: current.note || ''
+      };
+    }
+
+    function addCurrentToList(kind) {
+      if (!state.currentItem) {
+        showToast('Тут нечего сохранять 🤔');
+        return;
+      }
+
+      const target = getSavedList(kind).filter(entry => savedKey(entry) !== savedKey(state.currentItem));
+      const oppositeKind = kind === 'watched' ? 'watchlist' : 'watched';
+      const opposite = getSavedList(oppositeKind).filter(entry => savedKey(entry) !== savedKey(state.currentItem));
+
+      target.unshift(makeStoredItem(state.currentItem, kind));
+      saveSavedList(kind, target.slice(0, 100));
+      saveSavedList(oppositeKind, opposite);
+    }
+
+    function openList(kind) {
+      haptic('tap');
+      closeDrawer();
+      closeResult();
+      const meta = LIST_META[kind];
+      state.listOpen = true;
+      els.listPanel.dataset.kind = kind;
+      els.listTitle.textContent = meta.title;
+      els.listSubtitle.textContent = meta.subtitle;
+      els.listHeadIcon.textContent = meta.icon;
+      renderSavedList(kind);
+      document.documentElement.classList.add('list-open');
+      document.body.classList.add('list-open');
+      els.listPanel.classList.add('show');
+      els.listPanel.setAttribute('aria-hidden', 'false');
+      els.listPanel.scrollTop = 0;
+    }
+
+    function closeList() {
+      state.listOpen = false;
+      els.listPanel.classList.remove('show');
+      els.listPanel.setAttribute('aria-hidden', 'true');
+      document.documentElement.classList.remove('list-open');
+      document.body.classList.remove('list-open');
+    }
+
+    function renderSavedList(kind) {
+      const list = getSavedList(kind);
+      els.savedList.innerHTML = '';
+
+      if (!list.length) {
+        const empty = document.createElement('div');
+        empty.className = 'list-empty';
+        empty.innerHTML = `<span><b>${kind === 'watched' ? '🎬✓' : '📝★'}</b>${escapeHtml(LIST_META[kind].empty)}</span>`;
+        els.savedList.appendChild(empty);
+        return;
+      }
+
+      list.forEach(item => els.savedList.appendChild(createSavedItem(kind, item)));
+    }
+
+    function createSavedItem(kind, item) {
+      const article = document.createElement('article');
+      article.className = 'saved-item';
+
+      const poster = document.createElement('div');
+      poster.className = 'saved-poster';
+      if (item.posterUrl) {
+        const img = document.createElement('img');
+        img.src = item.posterUrl;
+        img.alt = `Постер: ${item.title || 'тайтл'}`;
+        img.loading = 'lazy';
+        img.referrerPolicy = 'no-referrer';
+        img.addEventListener('error', () => { poster.textContent = '🎬'; }, { once: true });
+        poster.appendChild(img);
+      } else {
+        poster.textContent = '🎬';
+      }
+
+      const body = document.createElement('div');
+      const title = document.createElement(item.kinopoiskUrl ? 'a' : 'span');
+      title.className = 'saved-title';
+      title.textContent = item.title || 'Без названия';
+      if (item.kinopoiskUrl) {
+        title.href = item.kinopoiskUrl;
+        title.target = '_blank';
+        title.rel = 'noopener';
+      }
+
+      const meta = document.createElement('div');
+      meta.className = 'saved-meta';
+      const metaParts = [item.typeLabel, item.year, item.ratingText && item.ratingText !== '—' ? `КП ${item.ratingText}` : '', ...(Array.isArray(item.genres) ? item.genres.slice(0, 2) : [])].filter(Boolean);
+      meta.textContent = metaParts.join(' • ');
+
+      const stars = document.createElement('div');
+      stars.className = 'saved-stars';
+      stars.setAttribute('aria-label', 'Моя оценка');
+      for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('button');
+        star.type = 'button';
+        star.className = `star-btn ${Number(item.userStars || 0) >= i ? 'active' : ''}`;
+        star.textContent = '★';
+        star.setAttribute('aria-label', `${i} из 5`);
+        star.addEventListener('click', () => {
+          updateSavedItem(kind, item, { userStars: Number(item.userStars || 0) === i ? 0 : i });
+          renderSavedList(kind);
+        });
+        stars.appendChild(star);
+      }
+
+      const note = document.createElement('textarea');
+      note.className = 'saved-note';
+      note.value = item.note || '';
+      note.placeholder = kind === 'watched'
+        ? 'Заметки после просмотра: что понравилось, что бесило, кому советовать…'
+        : 'Почему хочешь посмотреть? Настроение, компания, повод…';
+      note.addEventListener('input', () => {
+        clearTimeout(note._saveTimer);
+        note._saveTimer = setTimeout(() => updateSavedItem(kind, item, { note: note.value }), 250);
+      });
+      note.addEventListener('change', () => updateSavedItem(kind, item, { note: note.value }));
+
+      const actions = document.createElement('div');
+      actions.className = 'saved-actions';
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'remove-saved';
+      remove.textContent = 'убрать из списка';
+      remove.addEventListener('click', () => {
+        removeSavedItem(kind, item);
+        renderSavedList(kind);
+        showToast('Убрали с полки');
+      });
+      actions.appendChild(remove);
+
+      body.append(title, meta, stars, note, actions);
+      article.append(poster, body);
+      return article;
+    }
+
+    function updateSavedItem(kind, item, patch) {
+      const key = savedKey(item);
+      const list = getSavedList(kind).map(entry => savedKey(entry) === key ? { ...entry, ...patch } : entry);
+      saveSavedList(kind, list);
+    }
+
+    function removeSavedItem(kind, item) {
+      const key = savedKey(item);
+      saveSavedList(kind, getSavedList(kind).filter(entry => savedKey(entry) !== key));
     }
 
     els.cloud.setAttribute('role', 'button');
@@ -2340,6 +2808,12 @@
       haptic('close');
       closeResult();
     });
+    els.openWatched.addEventListener('click', () => openList('watched'));
+    els.openWatchlist.addEventListener('click', () => openList('watchlist'));
+    els.closeListPanel.addEventListener('click', () => {
+      haptic('close');
+      closeList();
+    });
     els.openSettings.addEventListener('click', openDrawer);
     els.closeSettings.addEventListener('click', closeDrawer);
     els.scrim.addEventListener('click', closeDrawer);
@@ -2361,12 +2835,16 @@
         clearReactions();
         haptic('action');
         button.classList.add('done');
-        const messages = {
-          'Смотрел': 'Окей, больше не подсовываем 👀',
-          'В список': 'Закинули в список ✨',
-          'Не хочу': 'Понял, отметаем 🙅‍♂️'
-        };
-        showToast(messages[button.dataset.reaction] || 'Записал');
+        const reaction = button.dataset.reaction;
+        if (reaction === 'Смотрел') {
+          addCurrentToList('watched');
+          showToast('Добавили в просмотренное ✓');
+        } else if (reaction === 'Буду смотреть') {
+          addCurrentToList('watchlist');
+          showToast('Положили в “буду смотреть” ★');
+        } else {
+          showToast('Понял, отметаем 🙅‍♂️');
+        }
         setTimeout(closeResult, 170);
       });
     });
