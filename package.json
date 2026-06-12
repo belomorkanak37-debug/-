@@ -1,0 +1,13 @@
+{
+  "name": "che-pozyrit-public-pwa",
+  "version": "0.2.4",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.mjs",
+    "dev": "node server/index.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
