@@ -1782,8 +1782,9 @@
       font-family: "Trebuchet MS", system-ui, sans-serif;
     }
     .saved-note:focus { border-color: rgba(32,38,74,.58); box-shadow: 0 0 0 4px rgba(232,225,255,.55); }
-    .saved-actions { display: flex; justify-content: flex-end; margin-top: 9px; }
-    .remove-saved {
+    .saved-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 9px; }
+    .remove-saved,
+    .move-saved {
       padding: 8px 12px;
       border-radius: 999px;
       background: #fff;
@@ -1791,6 +1792,12 @@
       color: rgba(32,38,74,.68);
       font-size: 12px;
       font-weight: 800;
+    }
+    .move-saved {
+      background: #dffbe9;
+      color: var(--ink);
+      border-color: rgba(32,38,74,.36);
+      box-shadow: 0 3px 0 rgba(32,38,74,.12);
     }
 
     @media (max-width: 520px) {
@@ -2594,7 +2601,7 @@
       },
       watchlist: {
         title: 'Буду смотреть',
-        subtitle: 'Список на потом: чтобы не потерять то самое “надо бы глянуть”.',
+        subtitle: 'Список на потом: без оценок и заметок, просто не потерять “надо бы глянуть”.',
         icon: '★',
         empty: 'Сюда попадают тайтлы после кнопки “Буду смотреть”. Пока список отдыхает.'
       }
@@ -2753,6 +2760,20 @@
 
       const actions = document.createElement('div');
       actions.className = 'saved-actions';
+
+      if (kind === 'watchlist') {
+        const move = document.createElement('button');
+        move.type = 'button';
+        move.className = 'move-saved';
+        move.textContent = 'в просмотрено';
+        move.addEventListener('click', () => {
+          moveWatchlistItemToWatched(item);
+          renderSavedList('watchlist');
+          showToast('Перенесли в просмотренное ✓');
+        });
+        actions.appendChild(move);
+      }
+
       const remove = document.createElement('button');
       remove.type = 'button';
       remove.className = 'remove-saved';
@@ -2764,7 +2785,11 @@
       });
       actions.appendChild(remove);
 
-      body.append(title, meta, stars, note, actions);
+      if (kind === 'watched') {
+        body.append(title, meta, stars, note, actions);
+      } else {
+        body.append(title, meta, actions);
+      }
       article.append(poster, body);
       return article;
     }
@@ -2778,6 +2803,21 @@
     function removeSavedItem(kind, item) {
       const key = savedKey(item);
       saveSavedList(kind, getSavedList(kind).filter(entry => savedKey(entry) !== key));
+    }
+
+    function moveWatchlistItemToWatched(item) {
+      const key = savedKey(item);
+      const watchlist = getSavedList('watchlist').filter(entry => savedKey(entry) !== key);
+      const watched = getSavedList('watched').filter(entry => savedKey(entry) !== key);
+      watched.unshift({
+        ...item,
+        listKind: 'watched',
+        savedAt: new Date().toISOString(),
+        userStars: 0,
+        note: ''
+      });
+      saveSavedList('watchlist', watchlist);
+      saveSavedList('watched', watched.slice(0, 100));
     }
 
     els.cloud.setAttribute('role', 'button');
